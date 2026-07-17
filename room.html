@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Shoko M.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+JP:wght@300;400&display=swap');
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Noto Sans JP',sans-serif;font-weight:300;background:#F7F6F4;color:#1A1A1A}
 
@@ -33,12 +35,9 @@
   /* ===== 本体 ===== */
   #room{display:none}
   .room-nav{padding:2rem 3rem;display:flex;justify-content:flex-end;align-items:center}
-  .room-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:0.12em;color:#1A1A1A}
   .room-back{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.1em;
         color:#8C8C8C;text-decoration:none;border-bottom:0.5px solid #D4D0C8;padding-bottom:2px}
   .room-head{text-align:center;padding:3rem 1.5rem 1.5rem}
-  .room-eyebrow{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:0.2em;
-        color:#8C8C8C;margin-bottom:1rem}
   .room-title{font-family:'Cormorant Garamond','Noto Sans JP',serif;font-weight:300;font-size:32px;
         letter-spacing:0.08em;color:#1A1A1A}
 
@@ -51,7 +50,8 @@
   .poem-media img,.poem-media video{width:100%;height:auto;display:block;filter:saturate(0.96)}
   .stanza{margin:0}
   .stanza + .stanza{margin-top:1.9rem}                /* 詩の中の空行（連の切れ目） */
-  .line{font-size:16.5px;line-height:2.15;letter-spacing:0.08em;color:#4A4640}
+  .line{font-family:'Noto Sans JP',sans-serif;font-weight:300;
+        font-size:16.5px;line-height:2.15;letter-spacing:0.08em;color:#4A4640}
 
   .room-footer{padding:2rem 3rem;background:#222;text-align:center;margin-top:2rem}
   .room-footer span{font-family:'Cormorant Garamond',serif;font-size:14px;
@@ -185,7 +185,6 @@
     return '<div class="poem-media">'+inner+'</div>';
   }
   function poemHTML(p){
-    // 連（空行区切り）に分割
     var stanzas = [[]];
     p.lines.forEach(function(l){
       if(l === '') stanzas.push([]);
