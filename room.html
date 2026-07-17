@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Shoko M.</title>
+</head>
+<body>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+JP:wght@300;400&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Noto Sans JP',sans-serif;font-weight:300;background:#F7F6F4;color:#1A1A1A}
+
+  /* ===== パスワード画面 ===== */
+  #gate{position:fixed;inset:0;background:#2A2A2A;display:flex;flex-direction:column;
+        justify-content:center;align-items:center;z-index:100;padding:2rem;text-align:center}
+  #gate .gate-eyebrow{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.2em;
+        color:rgba(247,246,244,0.55);margin-bottom:1.5rem}
+  #gate h1{font-family:'Cormorant Garamond','Noto Sans JP',serif;font-weight:300;font-size:32px;
+        letter-spacing:0.06em;color:#F7F6F4;margin-bottom:2rem}
+  #gate input{background:transparent;border:none;border-bottom:1px solid rgba(247,246,244,0.35);
+        color:#F7F6F4;font-family:'Noto Sans JP',sans-serif;font-size:16px;letter-spacing:0.1em;
+        padding:0.6rem 0.2rem;width:220px;text-align:center;outline:none}
+  #gate input::placeholder{color:rgba(247,246,244,0.3)}
+  #gate button{margin-top:1.8rem;background:transparent;border:1px solid rgba(247,246,244,0.4);
+        color:#F7F6F4;font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:0.15em;
+        padding:0.6rem 2.2rem;cursor:pointer;transition:all .3s}
+  #gate button:hover{background:rgba(247,246,244,0.1)}
+  #gate .gate-error{color:#C98B8B;font-size:13px;letter-spacing:0.08em;margin-top:1.2rem;
+        min-height:1.2em;opacity:0;transition:opacity .3s}
+
+  /* ===== 本体 ===== */
+  #room{display:none}
+  .room-nav{padding:2rem 3rem;display:flex;justify-content:flex-end;align-items:center}
+  .room-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:0.12em;color:#1A1A1A}
+  .room-back{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.1em;
+        color:#8C8C8C;text-decoration:none;border-bottom:0.5px solid #D4D0C8;padding-bottom:2px}
+  .room-head{text-align:center;padding:3rem 1.5rem 1.5rem}
+  .room-eyebrow{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:0.2em;
+        color:#8C8C8C;margin-bottom:1rem}
+  .room-title{font-family:'Cormorant Garamond','Noto Sans JP',serif;font-weight:300;font-size:32px;
+        letter-spacing:0.08em;color:#1A1A1A}
+
+  /* ===== 詩 ===== */
+  .poems{max-width:620px;margin:0 auto;padding:2rem 1.5rem 7rem}
+  .poem{text-align:left;padding:4.5rem 0 4.5rem 3rem}   /* 左のインデント3rem／詩と詩の間の余白 */
+  .poem:first-child{padding-top:1.5rem}
+  .poem + .poem{border-top:0.5px solid #E6E3DE}       /* ごく淡い区切り線（記号なし） */
+  .poem-media{margin:0 0 2.75rem;overflow:hidden;background:#EDEBE7}
+  .poem-media img,.poem-media video{width:100%;height:auto;display:block;filter:saturate(0.96)}
+  .stanza{margin:0}
+  .stanza + .stanza{margin-top:1.9rem}                /* 詩の中の空行（連の切れ目） */
+  .line{font-size:16.5px;line-height:2.15;letter-spacing:0.08em;color:#4A4640}
+
+  .room-footer{padding:2rem 3rem;background:#222;text-align:center;margin-top:2rem}
+  .room-footer span{font-family:'Cormorant Garamond',serif;font-size:14px;
+        letter-spacing:0.12em;color:#C4C0B8}
+
+  @media(max-width:820px){
+    .room-nav{padding:1.5rem}
+    .room-title{font-size:26px}
+    .poem{padding:3.6rem 0 3.6rem 1.75rem}
+  }
+  @media(max-width:480px){
+    .line{font-size:15.5px;line-height:2.05}
+    .poems{padding:1rem 1.25rem 5rem}
+  }
+</style>
+
+<!-- ========================================================= -->
+<!--  ★編集する場所は2か所だけ：合言葉 と 詩リスト             -->
+<!-- ========================================================= -->
+<script>
+  // 【1】合言葉（パスワード）
+  const PASSWORD = "lost-in-library";
+
+  // 【2】詩のリスト（渡された順のまま）。
+  //   ・1つの詩 = { } のかたまり。詩の順番は上から下。
+  //   ・lines … 詩の中の行。空の "" を入れると「連の切れ目（空行）」になります。
+  //   ・media … 将来ここに写真や映像を足すとき用。例）media:"works/poem2.jpg"
+  //             （動画なら works/poem2.mp4 のように動画ファイルでもOK）。今は空でOK。
+  const POEMS = [
+    {
+      media: "",
+      lines: [
+        "間違い電話の愛の主の",
+        "心臓の音を願っていた",
+        "それは部屋の外で鳴っていた",
+      ],
+    },
+    {
+      media: "",
+      lines: [
+        "春が来て如何して鏡が煤けるの",
+        "要らなくなった服売りに",
+        "それでも残ったワンピース",
+        "膝を抱えた思いの匂いが",
+        "帰る頃の淀んだ部屋を包んでた",
+        "匂いが苦しい",
+        "匂いが苦しい春の夜",
+      ],
+    },
+    {
+      media: "",
+      lines: [
+        "もう大丈夫と云う立入禁止",
+        "振り返らずに見送った",
+        "金木犀より、銀木犀より",
+        "春の踏みしだかれた花の萼",
+        "何もない昼",
+        "伽藍堂",
+      ],
+    },
+    {
+      media: "",
+      lines: [
+        "割れたガラスの涙は虹が囁くように",
+        "貴方が遺した眼差しの木漏れ日の端でそっと違う絵を描く",
+        "私の水たまりが裸足に沈んで消えてから、光の意味が解ったんだ",
+        "思い出が滲みるさよならで私の影は空に舞いました",
+        "洞窟の湖 花を見て",
+        "誰の頬も撫で得ぬ道に口笛を",
+      ],
+    },
+    {
+      media: "",
+      lines: [
+        "曖昧な遮断機 傘の音",
+        "水溜り靴の泥を落としても、指の間は砂まみれ",
+        "雨で肌は洗えても、服の白さは戻らない",
+        "",
+        "安っぽい香料ベニヤの匂い",
+        "あの頃にはもう戻れない",
+        "あの頃にはもう戻れない",
+        "残月を食んでいる",
+      ],
+    },
+  ];
+</script>
+<!-- ========= 編集はここまで。以下は触らなくて大丈夫です ========= -->
+
+<!-- パスワード画面 -->
+<div id="gate">
+  <p class="gate-eyebrow">Private</p>
+  <h1>ずっと続く物語</h1>
+  <input id="pw" type="password" placeholder="合言葉" autocomplete="off"
+         onkeydown="if(event.key==='Enter')tryEnter()">
+  <button onclick="tryEnter()">Enter</button>
+  <p id="err" class="gate-error">合言葉が違います</p>
+</div>
+
+<!-- 本体 -->
+<div id="room">
+  <nav class="room-nav">
+    <a class="room-back" href="index.html">← Home</a>
+  </nav>
+  <div class="room-head">
+    <h2 class="room-title">Tiny Tales</h2>
+  </div>
+  <div class="poems" id="poems"></div>
+  <footer class="room-footer"><span>Shoko M.</span></footer>
+</div>
+
+<script>
+  function tryEnter(){
+    var v = document.getElementById('pw').value;
+    if(v === PASSWORD){
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('room').style.display = 'block';
+      renderPoems();
+    } else {
+      document.getElementById('err').style.opacity = '1';
+    }
+  }
+  function esc(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function mediaTag(src){
+    if(!src) return '';
+    var isVideo = /\.(mp4|webm|mov|ogg)$/i.test(src);
+    var inner = isVideo
+      ? '<video src="'+src+'" autoplay muted loop playsinline></video>'
+      : '<img src="'+src+'" alt="" loading="lazy">';
+    return '<div class="poem-media">'+inner+'</div>';
+  }
+  function poemHTML(p){
+    // 連（空行区切り）に分割
+    var stanzas = [[]];
+    p.lines.forEach(function(l){
+      if(l === '') stanzas.push([]);
+      else stanzas[stanzas.length-1].push(l);
+    });
+    var body = stanzas.filter(function(s){return s.length;}).map(function(s){
+      var lines = s.map(function(l){return '<p class="line">'+esc(l)+'</p>';}).join('');
+      return '<div class="stanza">'+lines+'</div>';
+    }).join('');
+    return '<div class="poem">'+mediaTag(p.media)+body+'</div>';
+  }
+  function renderPoems(){
+    document.getElementById('poems').innerHTML = POEMS.map(poemHTML).join('');
+  }
+</script>
+</body>
+</html>
