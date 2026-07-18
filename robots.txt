@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shokosub0.github.io/shoko-m-photo/sitemap.xml
